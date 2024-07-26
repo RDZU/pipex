@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 07:22:18 by razamora          #+#    #+#             */
-/*   Updated: 2024/07/26 18:10:57 by razamora         ###   ########.fr       */
+/*   Updated: 2024/07/26 22:34:41 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,4 +26,5 @@ char	**ft_find_path(char **envp);
 void	ft_free_memory(char **tab);
 void	ft_error(char *str, int code);
 pid_t	ft_here_doc(char *str);
+
 #endif
