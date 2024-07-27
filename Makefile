@@ -12,7 +12,7 @@
 
 NAME		= pipex
 BONUS		= pipex_bonus
-CC			= gcc
+CC			= gcc -g
 CFLAG		= -Wall -Wextra -Werror -g
 RM			= rm -rf
 

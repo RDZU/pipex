@@ -6,24 +6,28 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 13:09:55 by razamora          #+#    #+#             */
-/*   Updated: 2024/07/27 00:32:32 by razamora         ###   ########.fr       */
+/*   Updated: 2024/07/27 15:15:25 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	exec_command(char *cmd, char *cmd_route, char *envp, char **full_cmd)
+static int	ft_command_error(char *cmd)
 {
-	int	flag;
-
-	flag = 0;
-	if (execve(cmd_route, full_cmd, NULL) < 0)
-	{
-		printf("command error");
-		exit(1);
-	}
+	ft_putstr_fd("command not found: ", 2);
+	ft_putendl_fd(cmd, 2);
+	exit(127);
 }
 
+void	exec_command(char *cmd_route, char **full_cmd)
+{
+	char const	*c;
+
+	c = " ";
+	cmd_route = ft_strtrim(cmd_route, c);
+	if (execve(cmd_route, full_cmd, NULL) < 0)
+		ft_command_error(cmd_route);
+}
 void	ft_check_command(char *cmd, char **envp)
 {
 	int		i;
@@ -33,24 +37,22 @@ void	ft_check_command(char *cmd, char **envp)
 	i = 0;
 	full_cmd = ft_split(cmd, ' ');
 	if (access(full_cmd[0], F_OK | X_OK) == 0)
-		execve(full_cmd[0], full_cmd, NULL);
+		exec_command(cmd, full_cmd);
 	else
 	{
 		cmd = ft_strjoin("/", full_cmd[0]);
-		
 		path = ft_find_path(envp);
+		//ft_putstr_fd(path,2);
 		if (path == NULL)
-			ft_error("Error: PATH not found", 2);
+			ft_error("Error: PATH not found", 1);
 		while (path[i] != NULL)
 		{
 			path[i] = ft_strjoin(path[i], cmd);
 			if (access(path[i], F_OK | X_OK) == 0)
-				exec_command(cmd, path[i], *envp, full_cmd);
+				exec_command(path[i], full_cmd);
 			i++;
 		}
-		ft_putstr_fd("command not found: ", 2);
-		ft_putstr_fd(cmd, 2);
-		exit(1);
+		ft_command_error(full_cmd[0]);
 	}
 }
 
@@ -60,7 +62,6 @@ static int	ft_error_file(int *file_pipe, char *file)
 	close(file_pipe[1]);
 	perror(file);
 }
-
 
 void	process_one(char **argv, char **envp, int *file_pipe)
 {

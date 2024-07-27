@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 07:22:18 by razamora          #+#    #+#             */
-/*   Updated: 2024/07/26 22:34:41 by razamora         ###   ########.fr       */
+/*   Updated: 2024/07/27 11:36:28 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-void	exec_command(char *cmd, char *cmd_route, char *envp, char **full_cmd);
+void	exec_command(char *cmd_route, char **full_cmd);
 void	ft_check_command(char *cmd, char **envp);
 void	process_one(char **argv, char **envp, int *file_pipe);
 void	process_two(char **argv, char **envp, int *file_pipe, int argc);
