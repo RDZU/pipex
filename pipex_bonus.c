@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 07:13:01 by razamora          #+#    #+#             */
-/*   Updated: 2024/07/27 15:15:50 by razamora         ###   ########.fr       */
+/*   Updated: 2024/07/28 17:34:50 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ void	process_one(char **argv, char **envp, int *file_pipe)
 	if (pid == 0)
 	{
 		close(file_pipe[0]);
-		fd = open(argv[1], O_RDONLY, 0644);
+		if (fd < 0)
+			ft_error_file(file_pipe, argv[1]);
 		dup2(fd, 0);
 		dup2(file_pipe[1], 1);
 		close(file_pipe[0]);
@@ -104,6 +105,7 @@ void	process_fin(char **argv, char **envp, int argc, int *file_pipe)
 	pid_t	pid;
 	int		fd;
 	int		i;
+	int		status;
 
 	pid = fork();
 	if (pid == -1)
@@ -114,6 +116,8 @@ void	process_fin(char **argv, char **envp, int argc, int *file_pipe)
 			fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else
 			fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fd < 0)
+			ft_error_file(file_pipe, argv[argc - 1]);
 		dup2(file_pipe[0], 0);
 		dup2(fd, 1);
 		close(fd);
@@ -125,8 +129,14 @@ void	process_fin(char **argv, char **envp, int argc, int *file_pipe)
 	close(file_pipe[1]);
 	i = 2;
 	while (i++ < argc - 1)
-		waitpid(-1, NULL, 0);
+	{
+		waitpid(-1, &status, 0);
+		if (WEXITSTATUS(status) == 127)
+			exit(127);
+	
+	}
 }
+
 int	main(int argc, char **argv, char **envp)
 {
 	int	*id;

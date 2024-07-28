@@ -6,15 +6,15 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 07:19:47 by razamora          #+#    #+#             */
-/*   Updated: 2024/07/26 07:32:27 by razamora         ###   ########.fr       */
+/*   Updated: 2024/07/28 17:09:12 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-char	**ft_find_path(char **envp)
+char	*ft_find_path(char **envp)
 {
-	char	**var_env;
+	char	*var_env;
 	char	*value_path;
 
 	while (*envp != NULL)
@@ -23,11 +23,10 @@ char	**ft_find_path(char **envp)
 		if (ft_strncmp(value_path, "PATH=", 5) == 0)
 		{
 			value_path = value_path + 5;
-			break ;
+			return (value_path);
 		}
 	}
-	var_env = ft_split(value_path, ':');
-	return (var_env);
+	return (NULL);
 }
 
 int	open_file(char *file, int type)

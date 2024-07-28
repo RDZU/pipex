@@ -1,49 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex_utils.c                                      :+:      :+:    :+:   */
+/*   handler_exp.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/26 07:22:03 by razamora          #+#    #+#             */
-/*   Updated: 2024/07/28 18:35:03 by razamora         ###   ########.fr       */
+/*   Created: 2024/07/28 16:15:31 by razamora          #+#    #+#             */
+/*   Updated: 2024/07/28 16:17:37 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
+#include "handler_exp.h"
 
-char	*ft_find_path(char **envp)
+int	ft_error_file(int *file_pipe, char *file)
 {
-	char	*var_env;
-	char	*value_path;
-
-	while (*envp != NULL)
-	{
-		value_path = *envp++;
-		if (ft_strncmp(value_path, "PATH=", 5) == 0)
-		{
-			value_path = value_path + 5;
-			return (value_path);
-		}
-	}
-	return (NULL);
+	close(file_pipe[0]);
+	close(file_pipe[1]);
+	perror(file);
 }
 
-void	ft_free_memory(char **tab)
+void	ft_print_error(char *title, int code, char *arg)
 {
-	size_t	i;
+	char	*str;
 
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		i++;
-	}
-	free(tab);
-}
-
-void	ft_error(char *str, int code)
-{
+	str = ft_strjoin(title, arg);
+	if (!str)
+		exit(1);
 	ft_putendl_fd(str, 2);
+	free(str);
 	exit(code);
 }

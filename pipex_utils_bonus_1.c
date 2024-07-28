@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 07:18:50 by razamora          #+#    #+#             */
-/*   Updated: 2024/07/27 15:12:15 by razamora         ###   ########.fr       */
+/*   Updated: 2024/07/28 17:08:47 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,23 +52,25 @@ void	ft_check_command(char *cmd, char **envp)
 {
 	int		i;
 	char	**full_cmd;
-	char	**path;
+	char	*path;
+	char	**path_split;
 
 	i = 0;
 	full_cmd = ft_split(cmd, ' ');
 	if (access(full_cmd[0], F_OK | X_OK) == 0)
-		exec_command_route(cmd, full_cmd);
+		exec_command(cmd, full_cmd);
 	else
 	{
 		cmd = ft_strjoin("/", full_cmd[0]);
 		path = ft_find_path(envp);
 		if (path == NULL)
-			ft_error("Error: PATH not found", 2);
-		while (path[i] != NULL)
+			exit(1);
+		path_split = ft_split(path, ':');
+		while (path_split[i] != NULL)
 		{
-			path[i] = ft_strjoin(path[i], cmd);
-			if (access(path[i], F_OK | X_OK) == 0)
-				exec_command(path[i], full_cmd);
+			path_split[i] = ft_strjoin(path_split[i], cmd);
+			if (access(path_split[i], F_OK | X_OK) == 0)
+				exec_command(path_split[i], full_cmd);
 			i++;
 		}
 		ft_command_error(full_cmd[0]);
