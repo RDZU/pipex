@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 07:19:47 by razamora          #+#    #+#             */
-/*   Updated: 2024/07/28 17:09:12 by razamora         ###   ########.fr       */
+/*   Updated: 2024/07/29 01:17:01 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,30 @@ char	*ft_find_path(char **envp)
 	return (NULL);
 }
 
+void	ft_free_memory(char **tab)
+{
+	size_t	i;
+
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tab);
+}
+
+int	finaly_openfile(char **av, int argc)
+{
+	int	fd_out;
+
+	if (ft_strcmp(av[1], "here_doc"))
+		fd_out = open_file(av[argc - 1], STDOUT_FILENO);
+	else
+		fd_out = open_file(av[argc - 1], 2);
+	return (fd_out);
+}
+
 int	open_file(char *file, int type)
 {
 	int	ret;
@@ -42,4 +66,14 @@ int	open_file(char *file, int type)
 	if (ret == -1)
 		(perror(file));
 	return (ret);
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])
+		i++;
+	return (s1[i] - s2[i]);
 }

@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 07:13:01 by razamora          #+#    #+#             */
-/*   Updated: 2024/07/28 17:34:50 by razamora         ###   ########.fr       */
+/*   Updated: 2024/07/29 01:14:54 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ void	process_one(char **argv, char **envp, int *file_pipe)
 
 	pid = fork();
 	if (pid == -1)
-		(perror("Error en fork"), exit(0));
+		(perror("Error en fork"), exit(1));
 	if (pid == 0)
 	{
-		close(file_pipe[0]);
+		fd = open(argv[1], O_RDONLY, 0664);
 		if (fd < 0)
-			ft_error_file(file_pipe, argv[1]);
+			(ft_error_file(file_pipe, argv[1]), exit(1));
 		dup2(fd, 0);
 		dup2(file_pipe[1], 1);
 		close(file_pipe[0]);
@@ -33,17 +33,6 @@ void	process_one(char **argv, char **envp, int *file_pipe)
 		ft_check_command(argv[2], envp);
 	}
 	close(file_pipe[1]);
-}
-
-int	ft_strcmp(char *s1, char *s2)
-
-{
-	int i;
-
-	i = 0;
-	while (s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])
-		i++;
-	return (s1[i] - s2[i]);
 }
 
 void	here_doc(char *str, int *file_pipe)
@@ -65,7 +54,7 @@ void	here_doc(char *str, int *file_pipe)
 			{
 				free(line);
 				close(file_pipe[1]);
-				exit(0);
+				exit(1);
 			}
 			(ft_putstr_fd(line, file_pipe[1]), free(line));
 		}
@@ -112,28 +101,20 @@ void	process_fin(char **argv, char **envp, int argc, int *file_pipe)
 		(perror("Error al crear el fork"), exit(1));
 	if (pid == 0)
 	{
-		if (ft_strncmp("here_doc", argv[1], 8) == 0)
-			fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
-		else
-			fd = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd < 0)
-			ft_error_file(file_pipe, argv[argc - 1]);
+		fd = finaly_openfile(argv, argc);
+		if (fd == -1)
+			exit(1);
 		dup2(file_pipe[0], 0);
 		dup2(fd, 1);
-		close(fd);
-		close(file_pipe[0]);
-		close(file_pipe[1]);
+		(close(fd), close(file_pipe[0]), close(file_pipe[1]));
 		ft_check_command(argv[argc - 2], envp);
 	}
-	close(file_pipe[0]);
-	close(file_pipe[1]);
-	i = 2;
+	i = (close(file_pipe[0]), close(file_pipe[1]), 2);
 	while (i++ < argc - 1)
 	{
 		waitpid(-1, &status, 0);
 		if (WEXITSTATUS(status) == 127)
-			exit(127);
-	
+			exit(WEXITSTATUS(status));
 	}
 }
 
@@ -146,7 +127,7 @@ int	main(int argc, char **argv, char **envp)
 	if (argc < 5)
 		(perror("minimum 5 argc"), exit(1));
 	if (pipe(file_pipe) == -1)
-		exit(0);
+		exit(1);
 	i = 2;
 	if (ft_strncmp("here_doc", argv[1], 8) == 0)
 		here_doc(argv[2], file_pipe);

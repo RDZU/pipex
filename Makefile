@@ -16,8 +16,8 @@ CC			= gcc -g
 CFLAG		= -Wall -Wextra -Werror -g
 RM			= rm -rf
 
-SOURCES = pipex.c pipex_utils.c
-SOURCES_BONUS = pipex_bonus.c pipex_utils_bonus_1.c pipex_utils_bonus_2.c
+SOURCES = pipex.c pipex_utils.c handler_exp.c
+SOURCES_BONUS = pipex_bonus.c pipex_utils_bonus_1.c pipex_utils_bonus_2.c handler_exp.c
 OBJECTS = $(SOURCES:.c=.o)
 OBJECTS_BONUS = $(SOURCES_BONUS:.c=.o)
 
