@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 13:09:55 by razamora          #+#    #+#             */
-/*   Updated: 2024/07/29 01:15:17 by razamora         ###   ########.fr       */
+/*   Updated: 2024/07/31 14:13:59 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,14 @@ int	ft_command_error(char *cmd)
 	free(cmd);
 	exit(127);
 }
-
-int	exec_command(char **full_cmd, char **env)
-{
-	char const	*c;
-
-	c = " ";
-	if (execve(full_cmd[0], full_cmd, env) == -1)
-		return (-1);
-}
-
 static pid_t	process_one(char **argv, char **envp, int *file_pipe)
 {
 	int		fd;
 	pid_t	id;
 
 	id = fork();
+	if (id == -1)
+		(perror("Error:"), exit(1));
 	if (id == 0)
 	{
 		fd = open(argv[1], O_RDONLY, 0664);
@@ -53,11 +45,11 @@ static pid_t	process_one(char **argv, char **envp, int *file_pipe)
 
 static pid_t	process_two(char **argv, char **envp, int *file_pipe, int argc)
 {
-	char	**path;
 	int		fd;
 	pid_t	id;
 
 	id = fork();
+	
 	if (id == 0)
 	{
 		fd = open(argv[argc - 1], O_CREAT | O_RDWR | O_TRUNC, 0777);
@@ -80,9 +72,9 @@ int	main(int argc, char **argv, char **envp)
 	int		status;
 
 	if (argc != 5)
-		(perror("format file1 cmd1 cmd2 file2"), exit(1));
+		(write(2, "format: file1 cmd1 cmd2 file2", 29), exit(1));
 	if (pipe(file_pipe) == -1)
-		exit(1);
+		(perror("Error:"), exit(1));
 	id[0] = process_one(argv, envp, file_pipe);
 	id[1] = process_two(argv, envp, file_pipe, argc);
 	close(file_pipe[0]);

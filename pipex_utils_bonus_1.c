@@ -6,51 +6,21 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 07:18:50 by razamora          #+#    #+#             */
-/*   Updated: 2024/07/29 01:10:48 by razamora         ###   ########.fr       */
+/*   Updated: 2024/07/31 14:20:08 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	ft_error(char *str, int code)
-{
-	ft_putendl_fd(str, 2);
-	exit(code);
-}
-
-int	ft_command_error(char *cmd)
-{
-	cmd = ft_strjoin(cmd, "\n");
-	write(2, "command not found: ", 20);
-	write(2, cmd, ft_strlen(cmd));
-	free(cmd);
-	exit(127);
-}
-
-void	exec_command_route(char *cmd_route, char **full_cmd)
-{
-	char		*msg;
-	char const	*c;
-
-	c = " ";
-	cmd_route = ft_strtrim(cmd_route, c);
-	if (execve(cmd_route, full_cmd, NULL) < 0)
-	{
-		msg = ft_strjoin("command not found: ", cmd_route);
-		ft_putendl_fd(msg, 2);
-		exit(127);
-	}
-}
-
 char	*ft_get_path(char **full_cmd, char **envp)
 {
 	char	*cmd;
 	char	*path;
-	char	*temp;
 	char	**path_split;
 	int		i;
 
-	path = ((i = 0), ft_find_path(envp));
+	i = 0;
+	path = ft_find_path(envp);
 	if (path == NULL)
 		ft_command_error(ft_strdup(full_cmd[0]));
 	cmd = ft_strjoin("/", full_cmd[0]);
@@ -71,15 +41,13 @@ void	ft_check_command(char *cmd, char **envp)
 {
 	char	**full_cmd;
 	char	*path;
-	char	**path_split;
 
+	ft_is_empty(cmd);
 	full_cmd = ft_split(cmd, ' ');
 	if (access(full_cmd[0], F_OK | X_OK) == 0)
 	{
 		if (execve(full_cmd[0], full_cmd, envp) == -1)
-		{
 			(ft_command_error(full_cmd[0]), ft_free_memory(full_cmd));
-		}
 	}
 	else
 	{
@@ -89,4 +57,21 @@ void	ft_check_command(char *cmd, char **envp)
 		ft_free_memory(full_cmd);
 		free(path);
 	}
+}
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	int	i;
+
+	i = 0;
+	while (s1[i] != '\0' && s2[i] != '\0' && s1[i] == s2[i])
+		i++;
+	return (s1[i] - s2[i]);
+}
+
+void	ft_error_file(int *file_pipe, char *file)
+{
+	close(file_pipe[0]);
+	close(file_pipe[1]);
+	perror(file);
 }

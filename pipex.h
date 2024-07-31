@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 07:22:18 by razamora          #+#    #+#             */
-/*   Updated: 2024/07/29 01:18:27 by razamora         ###   ########.fr       */
+/*   Updated: 2024/07/31 14:16:56 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,9 @@ int		exec_command(char **full_cmd, char **env);
 void	ft_check_command(char *cmd, char **envp);
 char	*ft_find_path(char **envp);
 void	ft_free_memory(char **tab);
-void	ft_error(char *str, int code);
-void	ft_print_error(char *title, int code, char *arg);
 char	*ft_get_path(char **full_cmd, char **envp);
-int		ft_error_file(int *file_pipe, char *file);
-void	ft_print_error(char *title, int code, char *arg);
+void	ft_error_file(int *file_pipe, char *file);
 int		ft_command_error(char *cmd);
+void	ft_is_empty(char *cmd);
 
 #endif
