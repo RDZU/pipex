@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 07:22:03 by razamora          #+#    #+#             */
-/*   Updated: 2024/07/31 14:16:19 by razamora         ###   ########.fr       */
+/*   Updated: 2024/08/02 21:50:01 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,13 @@ void	ft_check_command(char *cmd, char **envp)
 		if (execve(full_cmd[0], full_cmd, envp) == -1)
 			(ft_command_error(full_cmd[0]), ft_free_memory(full_cmd));
 	}
+	if (access(full_cmd[0], F_OK | X_OK) == 0 && ft_strnstr(full_cmd[0], "./", 2))
+    {
+        if (execve(full_cmd[0], full_cmd, envp) == -1)
+           (ft_command_error(full_cmd[0]), ft_free_memory(full_cmd));
+    }
+    else if (access(full_cmd[0], F_OK | X_OK) != 0 && ft_strchr(full_cmd[0], '/'))
+        ft_free_memory(full_cmd);
 	else
 	{
 		path = ft_get_path(full_cmd, envp);
