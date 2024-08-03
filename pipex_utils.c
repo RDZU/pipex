@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 07:22:03 by razamora          #+#    #+#             */
-/*   Updated: 2024/08/02 21:50:01 by razamora         ###   ########.fr       */
+/*   Updated: 2024/08/03 11:26:32 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,29 +75,29 @@ char	*ft_get_path(char **full_cmd, char **envp)
 
 void	ft_check_command(char *cmd, char **envp)
 {
-	char	**full_cmd;
+	char	**s_cmd;
 	char	*path;
 
 	ft_is_empty(cmd);
-	full_cmd = ft_split(cmd, ' ');
-	if (access(full_cmd[0], F_OK | X_OK) == 0)
+	s_cmd = ft_split(cmd, ' ');
+	if (access(s_cmd[0], F_OK | X_OK) == 0)
 	{
-		if (execve(full_cmd[0], full_cmd, envp) == -1)
-			(ft_command_error(full_cmd[0]), ft_free_memory(full_cmd));
+		if (execve(s_cmd[0], s_cmd, envp) == -1)
+			(ft_command_error(s_cmd[0]), ft_free_memory(s_cmd));
 	}
-	if (access(full_cmd[0], F_OK | X_OK) == 0 && ft_strnstr(full_cmd[0], "./", 2))
-    {
-        if (execve(full_cmd[0], full_cmd, envp) == -1)
-           (ft_command_error(full_cmd[0]), ft_free_memory(full_cmd));
-    }
-    else if (access(full_cmd[0], F_OK | X_OK) != 0 && ft_strchr(full_cmd[0], '/'))
-        ft_free_memory(full_cmd);
+	if (access(s_cmd[0], F_OK | X_OK) == 0 && ft_strnstr(s_cmd[0], "./", 2))
+	{
+		if (execve(s_cmd[0], s_cmd, envp) == -1)
+			(ft_command_error(s_cmd[0]), ft_free_memory(s_cmd));
+	}
+	else if (access(s_cmd[0], F_OK | X_OK) != 0 && ft_strchr(s_cmd[0], '/'))
+		ft_free_memory(s_cmd);
 	else
 	{
-		path = ft_get_path(full_cmd, envp);
-		if (execve(path, full_cmd, envp) == -1)
-			(ft_command_error(full_cmd[0]), ft_free_memory(full_cmd));
-		ft_free_memory(full_cmd);
+		path = ft_get_path(s_cmd, envp);
+		if (execve(path, s_cmd, envp) == -1)
+			(ft_command_error(s_cmd[0]), ft_free_memory(s_cmd));
+		ft_free_memory(s_cmd);
 		free(path);
 	}
 }

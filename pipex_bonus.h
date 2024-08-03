@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 07:25:06 by razamora          #+#    #+#             */
-/*   Updated: 2024/07/31 14:19:26 by razamora         ###   ########.fr       */
+/*   Updated: 2024/08/02 20:26:16 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
 # include <unistd.h>
 
 void	ft_check_command(char *cmd, char **envp);
-void	process_one(char **argv, char **envp, int *file_pipe);
+pid_t	process_one(char **argv, char **envp, int *file_pipe);
 int		middle_process(char *cmd, char **envp, int file_pipe[2]);
-void	process_fin(char **argv, char **envp, int argc, int *file_pipe);
+pid_t	process_fin(char **argv, char **envp, int argc, int *file_pipe);
 char	*ft_find_path(char **envp);
 void	ft_free_memory(char **tab);
 int		open_file(char *file, int type);
@@ -34,5 +34,7 @@ int		ft_strcmp(char *s1, char *s2);
 int		finaly_openfile(char **av, int argc);
 void	ft_close_fd_final(int fd, int *file_pipe);
 void	ft_is_empty(char *cmd);
+void	ft_exit_here_doc(char *line, char *tmp, int *file_pipe);
+int		catch_exp(int argc, pid_t *pids);
 
 #endif

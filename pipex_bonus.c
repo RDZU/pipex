@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 07:13:01 by razamora          #+#    #+#             */
-/*   Updated: 2024/08/02 20:59:28 by razamora         ###   ########.fr       */
+/*   Updated: 2024/08/03 11:37:49 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ pid_t	process_one(char **argv, char **envp, int *file_pipe)
 		close(file_pipe[1]);
 		ft_check_command(argv[2], envp);
 	}
-	return(pid);
+	return (pid);
 }
 
 void	here_doc(char *str, int *file_pipe)
@@ -111,10 +111,11 @@ pid_t	process_fin(char **argv, char **envp, int argc, int *file_pipe)
 
 int	main(int argc, char **argv, char **envp)
 {
-	int	i;
-	int	file_pipe[2];
-	pid_t	pids[argc - 1];
+	int		i;
+	int		file_pipe[2];
+	pid_t	*pids;
 
+	pids = malloc((argc - 1) * sizeof(pid_t));
 	if (argc < 5)
 		(write(2, "minimum 5 argc", 14), exit(1));
 	if (pipe(file_pipe) == -1)

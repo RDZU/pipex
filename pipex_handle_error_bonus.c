@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 07:22:03 by razamora          #+#    #+#             */
-/*   Updated: 2024/08/02 21:24:20 by razamora         ###   ########.fr       */
+/*   Updated: 2024/08/03 11:34:18 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	catch_exp(int argc, pid_t *pids)
 {
 	int	status;
 	int	error;
-	int i;
+	int	i;
 
 	error = 0;
 	i = 0;
@@ -49,5 +49,6 @@ int	catch_exp(int argc, pid_t *pids)
 		waitpid(pids[i++], &status, 0);
 	waitpid(pids[i], &status, 0);
 	error = (WEXITSTATUS(status));
+	free(pids);
 	return (error);
 }
