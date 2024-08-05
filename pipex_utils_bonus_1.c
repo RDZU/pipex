@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/26 07:18:50 by razamora          #+#    #+#             */
-/*   Updated: 2024/08/03 11:27:34 by razamora         ###   ########.fr       */
+/*   Updated: 2024/08/04 21:38:00 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,15 @@ char	*ft_get_path(char **full_cmd, char **envp)
 	char	*path;
 	char	**path_split;
 	int		i;
+	char	*new;
 
 	i = 0;
 	path = ft_find_path(envp);
 	if (path == NULL)
-		ft_command_error(ft_strdup(full_cmd[0]));
+	{
+		new = ft_strdup(full_cmd[0]);
+		(ft_command_error(new));
+	}
 	cmd = ft_strjoin("/", full_cmd[0]);
 	path_split = ft_split(path, ':');
 	while (path_split[i] != NULL)
@@ -44,7 +48,7 @@ void	ft_check_command(char *cmd, char **envp)
 
 	ft_is_empty(cmd);
 	s_cmd = ft_split(cmd, ' ');
-	if (access(s_cmd[0], F_OK | X_OK) == 0)
+	if (access(s_cmd[0], F_OK | X_OK) == 0 && s_cmd[0][0] == '/')
 	{
 		if (execve(s_cmd[0], s_cmd, envp) == -1)
 			(ft_command_error(s_cmd[0]), ft_free_memory(s_cmd));
@@ -55,11 +59,11 @@ void	ft_check_command(char *cmd, char **envp)
 			(ft_command_error(s_cmd[0]), ft_free_memory(s_cmd));
 	}
 	else if (access(s_cmd[0], F_OK | X_OK) != 0 && ft_strchr(s_cmd[0], '/'))
-		ft_free_memory(s_cmd);
+		(ft_command_error(s_cmd[0]), ft_free_memory(s_cmd));
 	else
 	{
 		path = ft_get_path(s_cmd, envp);
-		if (execve(path, s_cmd, envp) == -1)
+		if (path == NULL || execve(path, s_cmd, envp) == -1)
 			(ft_command_error(s_cmd[0]), ft_free_memory(s_cmd));
 		ft_free_memory(s_cmd);
 		free(path);

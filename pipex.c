@@ -6,7 +6,7 @@
 /*   By: razamora <razamora@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 13:09:55 by razamora          #+#    #+#             */
-/*   Updated: 2024/08/02 21:04:05 by razamora         ###   ########.fr       */
+/*   Updated: 2024/08/04 14:51:13 by razamora         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ static pid_t	process_one(char **argv, char **envp, int *file_pipe)
 		fd = open(argv[1], O_RDONLY, 0664);
 		if (fd < 0)
 			(ft_error_file(file_pipe, argv[1]), exit(1));
-		dup2(fd, STDIN_FILENO);
-		dup2(file_pipe[1], STDOUT_FILENO);
+		dup2(fd, 0);
+		dup2(file_pipe[1], 1);
 		close(file_pipe[0]);
 		close(file_pipe[1]);
 		close(fd);
@@ -55,8 +55,8 @@ static pid_t	process_two(char **argv, char **envp, int *file_pipe, int argc)
 		fd = open(argv[argc - 1], O_CREAT | O_RDWR | O_TRUNC, 0777);
 		if (fd < 0)
 			(ft_error_file(file_pipe, argv[argc - 1]), exit(1));
-		dup2(fd, 1);
 		dup2(file_pipe[0], 0);
+		dup2(fd, 1);
 		close(file_pipe[1]);
 		close(file_pipe[0]);
 		close(fd);
